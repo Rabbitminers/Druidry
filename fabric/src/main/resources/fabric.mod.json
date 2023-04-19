@@ -20,7 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.rabbitminers.druidry.fabric.DruidryFabric"
+      "com.rabbitminers.druidry.fabric.DruidryImpl"
     ]
   },
   "mixins": [
