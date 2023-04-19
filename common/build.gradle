@@ -6,8 +6,15 @@ loom {
     accessWidenerPath = file("src/main/resources/druidry.accesswidener")
 }
 
+repositories {
+    maven { url = "https://mvn.devos.one/snapshots/" } // Registrate
+    maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
+    modApi("com.tterrag.registrate_fabric:Registrate:$registrate_fabric_version")
 }
 
 publishing {

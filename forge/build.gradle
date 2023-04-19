@@ -27,8 +27,21 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+repositories {
+    maven {
+        url = "https://maven.tterrag.com/"
+        content {
+            includeGroup("com.tterrag.registrate")
+        }
+    }
+    maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
+
+    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
+    modImplementation("com.tterrag.registrate:Registrate:${registrate_forge_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
