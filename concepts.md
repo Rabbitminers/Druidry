@@ -17,9 +17,6 @@ Stewlings, Soup Pots, Huge Soup Pots, Ingredients, Step Stools
 
 <img src=images/heated_cauldron.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
 
-
----
-
 ### Stewlings
 (The cutest whisk you'll ever meet)
 
@@ -60,7 +57,28 @@ Also see the [Corrupted Cauldron](#corrupted-cauldron)
 
 ## Item Transport
 
-TODO
+### Overview
+
+Item transport comes in many forms, aside from the original vanilla item movement techniques, multiple new methods will be included allowing for items to be pushed, pulled, attracted and carried completely automatically
+
+---
+
+### Tuff Golems
+
+Tuff golems will help you move around items within your grove, they can either carry around a single item type in large quantities or throw smaller stacks of multiple item types either into a specified spot or towards another golem
+
+<div style="display: flex; flex-direction: row; gap: 3em">
+    <img src=images/worry.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
+    <img src=images/anger.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
+</div>
+
+You could also change their outfit by clicking on them with a different type of dye (not designed yet) aswell as this when carrying blocks they can either deposit them as items or place it down. 
+
+Their eyebrows could indicate their status such as health, path finding status, quantity of items available etc.
+
+---
+
+
 
 ---
 
