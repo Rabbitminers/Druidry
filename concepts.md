@@ -15,6 +15,9 @@ Golems get hungry, what do they like? Soup! These can be made from mixing almost
 ### Conents
 Stewlings, Soup Pots, Huge Soup Pots, Ingredients, Step Stools
 
+<img src=images/heated_cauldron.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
+
+
 ---
 
 ### Stewlings
@@ -40,11 +43,16 @@ Summoning the stewling : TODO
 
 Stewlings are short chaps and might need a leg up to reach heated cauldrons so give them a step stool (? also availabe in  a stool design) and in other wood types
 
+<img src=images/stool.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
+
 ---
 
 ### Huge Soup Pots
 
 By placing cauldrons next to one another they can be combined like so, to form a larger cauldron to produce more soup at once, this will also require more heat which can be sourced as shown before with campfires or with other blocks such as magma or lava beneath the cauldron. (They also need a [stepping stool](#stewling-step-stools) for stewlings to reach them)
+
+<img src=images/huge_cauldron.png/ alt="https://github.com/rabbitminers/druidry" width="200em" alt="">
+
 
 Perhaps these could also be used as troughs for animals aswell as for alchemy at varying tempratures by increasing the surface area of the cauldron
 
