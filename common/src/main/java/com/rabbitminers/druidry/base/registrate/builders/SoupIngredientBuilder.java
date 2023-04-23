@@ -5,6 +5,7 @@ import com.rabbitminers.druidry.content.soup.data.SoupIngredient;
 import com.rabbitminers.druidry.registry.DruidryRegistries;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -13,12 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredient, Item, MapBoundRegistry<Item, SoupIngredient>> {
-    private final NonNullSupplier<Set<SoupIngredient>> synergisticIngredients = HashSet::new;
-    private final NonNullSupplier<Set<SoupIngredient>> conflictingIngredients = HashSet::new;
+    protected final NonNullSupplier<Set<SoupIngredient>> synergisticIngredients = HashSet::new;
+    protected final NonNullSupplier<Set<SoupIngredient>> conflictingIngredients = HashSet::new;
 
-    private NonNullSupplier<Double> sweetness;
-    private NonNullSupplier<Double> spice;
-    private NonNullSupplier<Double> saltiness;
+    protected NonNullSupplier<Double> sweetness, spice, saltiness, sour, bitter;
 
     public static SoupIngredientBuilder create(Item ingredientItem) {
         return new SoupIngredientBuilder(DruidryRegistries.SOUP_INGREDIENT_REGISTRY, ingredientItem);
@@ -29,6 +28,8 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
         this.sweetness = () -> 0.0d;
         this.spice = () -> 0.0d;
         this.saltiness = () -> 0.0d;
+        this.sour = () -> 0.0d;
+        this.bitter = () -> 0.0d;
     }
 
     public SoupIngredientBuilder synergisticIngredient(SoupIngredient... ingredients) {
@@ -36,18 +37,9 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
         return this;
     }
 
-    public SoupIngredientBuilder synergisticIngredient(SoupIngredient ingredient) {
-        this.synergisticIngredient(ingredient);
-        return this;
-    }
 
     public SoupIngredientBuilder conflictingIngredient(SoupIngredient... ingredients) {
         Collections.addAll(this.conflictingIngredients.get(), ingredients);
-        return this;
-    }
-
-    public SoupIngredientBuilder conflictingIngredient(SoupIngredient ingredient) {
-        this.conflictingIngredient(ingredient);
         return this;
     }
 
@@ -66,6 +58,28 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
         return this;
     }
 
+    public SoupIngredientBuilder sour(double sour) {
+        this.sour = () -> sour;
+        return this;
+    }
+
+    public SoupIngredientBuilder bitter(double bitter) {
+        this.bitter = () -> bitter;
+        return this;
+    }
+
+    public PourableSoupIngredientBuilder pourable() {
+        return new PourableSoupIngredientBuilder(this);
+    }
+
+    public PourableSoupIngredientBuilder bottled() {
+        return new PourableSoupIngredientBuilder(this, Items.GLASS_PANE);
+    }
+
+    public PourableSoupIngredientBuilder bucketed() {
+        return new PourableSoupIngredientBuilder(this, Items.BUCKET);
+    }
+
     @Override
     protected @NotNull SoupIngredient createEntry() {
         return new SoupIngredient(
@@ -73,6 +87,8 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
             sweetness.get(),
             spice.get(),
             saltiness.get(),
+            sour.get(),
+            bitter.get(),
             synergisticIngredients.get(),
             conflictingIngredients.get()
         );

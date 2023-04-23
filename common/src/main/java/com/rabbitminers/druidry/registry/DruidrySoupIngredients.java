@@ -9,7 +9,7 @@ public class DruidrySoupIngredients {
     public static DruidicRegistrate REGISTRATE = Druidry.registrate();
 
     public static final SoupIngredient HONEY = REGISTRATE.soupIngredient(Items.HONEY_BOTTLE)
-            .saltiness(0.1).sweetness(0.9).spice(0)
+            .saltiness(0.1).sweetness(0.9).bottled()
             .register();
 
     public static final SoupIngredient APPLE = REGISTRATE.soupIngredient(Items.APPLE)
@@ -18,8 +18,7 @@ public class DruidrySoupIngredients {
             .register();
 
     public static final SoupIngredient FIRE_CHARGE = REGISTRATE.soupIngredient(Items.FIRE_CHARGE)
-            .conflictingIngredient(APPLE, HONEY)
-            .saltiness(0).sweetness(0).spice(1)
+            .conflictingIngredient(APPLE, HONEY).spice(1).bitter(0.5)
             .register();
 
     public static void init() {
