@@ -7,6 +7,8 @@
 
 ![image](images/poster.png)
 
+A (More complete list of features is [here](concepts.md))
+
 ---
 
 ## We're still work in progress
