@@ -205,10 +205,21 @@ Flowers -> Grasses -> Crops -> Roots -> Misc
 - Can be boiled into stews and broths for a short regeneration effect
 
 ---
-<!--
+
 ### Overworld - Druidry
+
 ---
 
+## *Grasses*
+
+
+#### Moss Clump
+*Bryophyta*
+
+> *Bryophyta* originates from the Greek "bruon", meaning moss, and "phuta", meaning plants. Though the term is often used to describe other similar plants such as liverworts, strictly, it refers only to mosses.
+
+---
+<!--
 ### Overworld - Compatibility
 ---
 
@@ -234,6 +245,11 @@ Flowers -> Grasses -> Crops -> Roots -> Misc
 ---
 -->
 ### Deep Dark - Druidry
+
+---
+
+## *Misc*
+
 
 #### Ancient Bone
 *Os archaios*
