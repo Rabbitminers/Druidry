@@ -3,27 +3,27 @@ package com.rabbitminers.druidry.base.registrate.builders;
 import com.rabbitminers.druidry.base.registrate.registries.MapBoundRegistry;
 import com.rabbitminers.druidry.content.soup.data.SoupIngredient;
 import com.rabbitminers.druidry.registry.DruidryRegistries;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredient, Item, MapBoundRegistry<Item, SoupIngredient>> {
+public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredient, ResourceLocation, MapBoundRegistry<ResourceLocation, SoupIngredient>> {
     protected final NonNullSupplier<Set<SoupIngredient>> synergisticIngredients = HashSet::new;
     protected final NonNullSupplier<Set<SoupIngredient>> conflictingIngredients = HashSet::new;
 
     protected NonNullSupplier<Double> sweetness, spice, saltiness, sour, bitter;
 
-    public static SoupIngredientBuilder create(Item ingredientItem) {
+    public static SoupIngredientBuilder create(ResourceLocation ingredientItem) {
         return new SoupIngredientBuilder(DruidryRegistries.SOUP_INGREDIENT_REGISTRY, ingredientItem);
     }
 
-    protected  SoupIngredientBuilder(@NotNull MapBoundRegistry<Item, SoupIngredient> registry, Item ingredientItem) {
+    protected SoupIngredientBuilder(@NotNull MapBoundRegistry<ResourceLocation, SoupIngredient> registry, ResourceLocation ingredientItem) {
         super(registry, ingredientItem);
         this.sweetness = () -> 0.0d;
         this.spice = () -> 0.0d;
@@ -73,7 +73,7 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
     }
 
     public PourableSoupIngredientBuilder bottled() {
-        return new PourableSoupIngredientBuilder(this, Items.GLASS_PANE);
+        return new PourableSoupIngredientBuilder(this, Items.GLASS_BOTTLE);
     }
 
     public PourableSoupIngredientBuilder bucketed() {
@@ -81,7 +81,7 @@ public class SoupIngredientBuilder extends AbstractMapBoundBuilder<SoupIngredien
     }
 
     @Override
-    protected @NotNull SoupIngredient createEntry() {
+    public @NotNull SoupIngredient createEntry() {
         return new SoupIngredient(
             super.entryName,
             sweetness.get(),
