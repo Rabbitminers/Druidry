@@ -2,6 +2,12 @@ package com.rabbitminers.druidry.base.helpers;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
 public class NBTHelper {
     public static void writeResourceLocation(CompoundTag nbt, String key, ResourceLocation location) {
         nbt.putString(key, location.toString());
@@ -14,5 +20,19 @@ public class NBTHelper {
         if (data.length != 2)
             return null;
         return new ResourceLocation(data[0], data[1]);
+    }
+
+    public static <T> void writeCollection(CompoundTag nbt, String key, Collection<T> collection) {
+        String serialized = collection.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
+        nbt.putString(key, serialized);
+    }
+
+    public static Collection<String> readCollection(CompoundTag nbt, String key) {
+        String serialized = nbt.getString(key);
+        return Arrays.stream(serialized.split(", "))
+                .map(String::trim)
+                .collect(Collectors.toCollection(HashSet::new));
     }
 }
