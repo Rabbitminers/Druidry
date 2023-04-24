@@ -42,6 +42,10 @@ public class MapBoundRegistry<T, P> implements Keyable {
         }
     }
 
+    public void clear() {
+        registry.clear();
+    }
+
     public Collection<P> registryEntries() {
         return registry.values();
     }
