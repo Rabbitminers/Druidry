@@ -1,7 +1,10 @@
 package com.rabbitminers.druidry.base.registrate.builders;
 
 import com.rabbitminers.druidry.base.registrate.registries.MapBoundRegistry;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * Base class for map bound registries
@@ -23,6 +26,20 @@ public abstract class AbstractMapBoundBuilder<T, E, R extends MapBoundRegistry<E
     }
 
     protected abstract @NotNull T createEntry();
+
+    @SuppressWarnings("unchecked")
+    public <A extends AbstractMapBoundBuilder<T, E, R>> A transform(NonNullFunction<A, A> function) {
+        return function.apply((A) this);
+    }
+
+    public E getName() {
+        return this.entryName;
+    }
+
+    public Optional<T> get() {
+        T object = this.registry.getUnchecked(this.entryName);
+        return object == null ? Optional.empty() : Optional.of(object);
+    }
 
     public T register() {
         T object = this.createEntry();
