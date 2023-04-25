@@ -1,141 +1,142 @@
 package com.rabbitminers.druidry.content.soup.data;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.rabbitminers.druidry.Druidry;
-import com.rabbitminers.druidry.base.helpers.NBTHelper;
-import com.rabbitminers.druidry.base.registrate.builders.SoupIngredientBuilder;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.TagType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
-/*
-* Annoyingly cannot be a record as they cannot be inherited from
- */
-
-public class SoupIngredient {
-    public final Set<SoupIngredient> synergisticIngredients;
-    public final Set<SoupIngredient> conflictingIngredients;
-
-    public final ResourceLocation ingredient;
-    public final double sweetness, spice, saltiness, sour, bitter;
-
-    public SoupIngredient(ResourceLocation ingredient, double sweetness, double spice, double saltiness, double sour, double bitter,
-                          Set<SoupIngredient> synergisticIngredients, Set<SoupIngredient> conflictingIngredients) {
-        this.ingredient = ingredient;
-        this.sweetness = sweetness;
-        this.spice = spice;
-        this.saltiness = saltiness;
-        this.sour = sour;
-        this.bitter = bitter;
-
-        this.synergisticIngredients = synergisticIngredients;
-        this.conflictingIngredients = conflictingIngredients;
+public record SoupIngredient(ResourceLocation location, Item ingredient, Flavour flavour, Optional<Item> returnItem,
+                             Set<ResourceLocation> synergisticIngredients, Set<ResourceLocation> conflictingIngredients) {
+    public void toBuffer(FriendlyByteBuf buffer) {
+        buffer.writeResourceLocation(location);
+        buffer.writeResourceLocation(Registry.ITEM.getKey(ingredient));
+        flavour.toBuffer(buffer);
+        boolean pourable = returnItem.isPresent();
+        buffer.writeBoolean(pourable);
+        if (pourable)
+            buffer.writeResourceLocation(Registry.ITEM.getKey(returnItem.get()));
+        buffer.writeCollection(synergisticIngredients, FriendlyByteBuf::writeResourceLocation);
+        buffer.writeCollection(conflictingIngredients, FriendlyByteBuf::writeResourceLocation);
     }
 
-    public SoupIngredient(ResourceLocation ingredient, double sweetness, double spice, double saltiness, double sour, double bitter) {
-        this(ingredient, sweetness, spice, saltiness, sour, bitter, new HashSet<>(), new HashSet<>());
+    public static SoupIngredient fromBuffer(FriendlyByteBuf buffer) {
+        ResourceLocation location = buffer.readResourceLocation();
+        Item item = Registry.ITEM.get(buffer.readResourceLocation());
+        Flavour taste = Flavour.fromBuffer(buffer);
+        Optional<Item> emptyItem = buffer.readBoolean()
+                ? getOptionalItem(buffer.readResourceLocation())
+                : Optional.empty();
+        Set<ResourceLocation>
+                synergisticIngredients = buffer.readCollection(HashSet::new, FriendlyByteBuf::readResourceLocation),
+                conflictingIngredients = buffer.readCollection(HashSet::new, FriendlyByteBuf::readResourceLocation);
+        return new SoupIngredient(location, item, taste, emptyItem, synergisticIngredients, conflictingIngredients);
     }
 
-    /**
-     * Adds the given SoupIngredients as synergistic ingredients.
-     *
-     * @param ingredients the ingredients to add
-     * @return this SoupIngredient
+    private static Optional<Item> getOptionalItem(ResourceLocation location) {
+        Item item = Registry.ITEM.get(location);
+        return item == Items.AIR ? Optional.empty() : Optional.of(item);
+    }
+
+    public static Optional<SoupIngredient> fromJson(ResourceLocation location, JsonObject object) {
+        try {
+            Optional<Item> item = readItemFromJson(object, "item");
+            if (item.isEmpty())
+                return Optional.empty();
+            Optional<Item> returnItem = readItemFromJson(object, "returnItem");
+            Flavour taste = Flavour.fromJson(object.get("flavour").getAsJsonObject());
+            Set<ResourceLocation>
+                    synergistic = readResourceLocationList(object, "synergisticIngredients"),
+                    conflicting = readResourceLocationList(object, "conflictingIngredients");
+            return Optional.of(
+                new SoupIngredient(location, item.get(), taste, returnItem, synergistic, conflicting)
+            );
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Item> readItemFromJson(JsonObject object, String key) {
+        JsonElement serializedItem = object.get(key);
+
+        if (serializedItem == null || !serializedItem.isJsonPrimitive())
+            return Optional.empty();
+        JsonPrimitive primitive = serializedItem.getAsJsonPrimitive();
+        if (!primitive.isString())
+            return Optional.empty();
+
+        return SoupIngredient.getOptionalItem(new ResourceLocation(primitive.getAsString()));
+    }
+
+    private static JsonPrimitive parseJsonPrimitive(JsonObject object, String key, Predicate<JsonPrimitive> predicate) {
+        JsonElement element = object.get(key);
+        if (element != null && element.isJsonPrimitive()) {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (predicate.test(primitive)) {
+                return primitive;
+            }
+        }
+        throw new IllegalArgumentException("Invalid or missing key: " + key);
+    }
+
+    private static Set<ResourceLocation> readResourceLocationList(JsonObject object, String key) {
+        Set<ResourceLocation> collection = new HashSet<>();
+
+        JsonArray array = object.getAsJsonArray(key);
+
+        if (array == null) {
+            return collection;
+        }
+
+        for (JsonElement element : array) {
+            if (!element.isJsonPrimitive()) {
+                continue;
+            }
+
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (!primitive.isString()) {
+                continue;
+            }
+
+            collection.add(new ResourceLocation(primitive.getAsString()));
+        }
+
+        return collection;
+    }
+
+    /*
+    Extracted to make it more easily re-usable
+
+    See
      */
-    public SoupIngredient addSynergisticIngredients(SoupIngredient... ingredients) {
-        Collections.addAll(this.synergisticIngredients, ingredients);
-        return this;
-    }
-
-    /**
-     * Adds the given SoupIngredients as conflicting ingredients.
-     *
-     * @param ingredients the ingredients to add
-     * @return this SoupIngredient
-     */
-    public SoupIngredient addConflictingIngredients(SoupIngredient... ingredients) {
-        Collections.addAll(this.conflictingIngredients, ingredients);
-        return this;
-    }
-
-    public void serialize(CompoundTag nbt) {
-        NBTHelper.writeResourceLocation(nbt, "item", this.ingredient);
-
-        nbt.putDouble("sweetness", this.sweetness);
-        nbt.putDouble("spice", this.spice);
-        nbt.putDouble("saltiness", this.saltiness);
-        nbt.putDouble("sour", this.sour);
-        nbt.putDouble("bitter", this.bitter);
-
-        NBTHelper.writeCollection(nbt, "synergisticIngredients", this.synergisticIngredients);
-        NBTHelper.writeCollection(nbt, "conflictingIngredients", this.conflictingIngredients);
-    }
-
-    public static SoupIngredient read(CompoundTag nbt) {
-        ResourceLocation item = NBTHelper.readResourceLocation(nbt, "item");
-        SoupIngredientBuilder builder = Druidry.registrate().soupIngredient(item);
-
-        builder.sweetness(nbt.getDouble("sweetness"))
-                    .spice(nbt.getDouble("spice"))
-                    .saltiness(nbt.getDouble("saltiness"))
-                    .sour(nbt.getDouble("sour"))
-                    .bitter(nbt.getDouble("bitter"));
-
-        if (nbt.contains("emptiedItem")) {
-            ResourceLocation emptyItem = NBTHelper.readResourceLocation(nbt, "emptiedItem");
-            builder.pourable().bottled();
+    public record Flavour(double sweetness, double spice, double saltiness, double sour, double bitter) {
+        public void toBuffer(FriendlyByteBuf buf) {
+            Flavour.writeDoubles(buf, sweetness, spice, sweetness, sour, bitter);
         }
 
-        return builder.createEntry();
-    }
-
-    /**
-     * A subclass of SoupIngredient representing an ingredient that can be emptied,
-     * and used up, such as a honey bottle or a milk bucket.
-     **/
-    public static class PourableSoupIngredient extends SoupIngredient {
-        // TODO: STORE ANIMATION PREDICATE
-        private ResourceLocation emptiedItem;
-
-        public PourableSoupIngredient(ResourceLocation ingredient, double sweetness, double spice, double saltiness,  double sour, double bitter,
-                              Set<SoupIngredient> synergisticIngredients, Set<SoupIngredient> conflictingIngredients, ResourceLocation emptiedItem) {
-            super(ingredient, sweetness, spice, saltiness, sour, bitter, synergisticIngredients, conflictingIngredients);
-            this.emptiedItem = emptiedItem;
+        public static Flavour fromBuffer(FriendlyByteBuf buf) {
+            return new Flavour(buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
 
-        public PourableSoupIngredient(SoupIngredient ingredient, ResourceLocation emptiedItem) {
-            this(ingredient.ingredient, ingredient.sweetness, ingredient.spice, ingredient.saltiness, ingredient.sour,
-                ingredient.bitter, ingredient.synergisticIngredients, ingredient.conflictingIngredients, emptiedItem);
+        public static Flavour fromJson(JsonObject object) {
+            return new Flavour(
+                parseJsonPrimitive(object, "sweetness", JsonPrimitive::isNumber).getAsDouble(),
+                parseJsonPrimitive(object, "spice", JsonPrimitive::isNumber).getAsDouble(),
+                parseJsonPrimitive(object, "saltiness", JsonPrimitive::isNumber).getAsDouble(),
+                parseJsonPrimitive(object, "sour", JsonPrimitive::isNumber).getAsDouble(),
+                parseJsonPrimitive(object, "bitter", JsonPrimitive::isNumber).getAsDouble()
+            );
         }
 
-        public Optional<Item> getEmptiedItem() {
-            return Registry.ITEM.getOptional(emptiedItem);
-        }
-
-        /**
-         * Get new item stack from empty item
-         *
-         * @return new ItemStack of the type of the empty item
-         */
-
-        public Optional<ItemStack> getEmptiedItemStack() {
-            Optional<Item> item = getEmptiedItem();
-            return item.map(ItemStack::new);
-        }
-
-        public PourableSoupIngredient setEmptiedItem(ResourceLocation emptiedItem) {
-            this.emptiedItem = emptiedItem;
-            return this;
+        public static void writeDoubles(FriendlyByteBuf buf, double... values) {
+            Arrays.stream(values).forEach(buf::writeDouble);
         }
     }
 }
