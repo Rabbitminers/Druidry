@@ -92,6 +92,7 @@ public class SoupIngredientsManager {
         }
 
         public SyncPacket(FriendlyByteBuf buffer) {
+            buffer.retain();
             this.buffer = buffer;
         }
 
