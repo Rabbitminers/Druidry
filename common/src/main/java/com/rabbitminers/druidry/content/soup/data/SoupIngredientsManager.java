@@ -5,10 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rabbitminers.druidry.Druidry;
 import com.rabbitminers.druidry.networking.ChannelHandler;
+import com.rabbitminers.druidry.networking.DruidryNetworkHandler;
 import com.rabbitminers.druidry.networking.Packet;
-import com.rabbitminers.druidry.registry.DruidryRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -48,6 +49,14 @@ public class SoupIngredientsManager {
     public static void clear() {
         INGREDIENTS.clear();
         ITEM_TO_INGREDIENTS.clear();
+    }
+
+    public static void syncTo(ServerPlayer player) {
+        DruidryNetworkHandler.CHANNEL.sendToClientPlayer(player, new SyncPacket());
+    }
+
+    public static void syncToAll() {
+        DruidryNetworkHandler.CHANNEL.sendToAllClientPlayers(new SyncPacket());
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {
