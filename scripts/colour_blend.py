@@ -1,5 +1,6 @@
 import timeit
 from typing import Tuple, Any, Callable
+import re
 
 def timed_function(func: Callable[..., Any]) -> Callable[..., Any]:
     """Annotation to time a function to compare performance"""
@@ -36,5 +37,32 @@ def interpolate_hex_colours(start_hex: str, end_hex: str, steps: int) -> None:
         print("\033[48;2;{};{};{}m  \033[0m".format(r, g, b), end="")
     print("\n")
 
+@timed_function
+def blend_colours(hex_colour1: str, hex_colour2: str, weight: float) -> str:
+    """
+    Blend two hex colours and display the result as a rendered colour.
+    """
+    if not re.match(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', hex_colour1):
+        raise ValueError("Invalid hex colour: {}".format(hex_colour1))
+    if not re.match(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', hex_colour2):
+        raise ValueError("Invalid hex colour: {}".format(hex_colour2))
+    if not 0 <= weight <= 1:
+        raise ValueError("Invalid weight: {}".format(weight))
+
+    rgb1 = tuple(int(hex_colour1[i:i+2], 16) for i in (1, 3, 5))
+    rgb2 = tuple(int(hex_colour2[i:i+2], 16) for i in (1, 3, 5))
+
+    blended_rgb = tuple(int(round(w*c1 + (1-w)*c2)) for c1, c2 in zip(rgb1, rgb2) for w in [weight])
+
+    blended_hex = "#{:02x}{:02x}{:02x}".format(*blended_rgb)
+
+    print("\033[48;2;{};{};{}m    \033[0m".format(*rgb1), end='')
+    print("\033[48;2;{};{};{}m    \033[0m".format(*blended_rgb), end='')
+    print("\033[48;2;{};{};{}m    \033[0m".format(*rgb2))
+    print("\n")
+
+    return blended_hex
+
 if __name__ == '__main__':
     interpolate_hex_colours("#12baba", "#Fb00aF", 10)
+    blend_colours("#12baba", "#Fb00aF", 0.5)
