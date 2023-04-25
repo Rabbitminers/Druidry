@@ -21,9 +21,9 @@ public class FabricClientNetworking {
 
     }
 
-    public static <M extends Packet> void handlePacket(Function<FriendlyByteBuf, M> decoder, Minecraft client,
+    public static <P extends Packet> void handlePacket(Function<FriendlyByteBuf, P> decoder, Minecraft client,
                                                        ClientPacketListener listener, FriendlyByteBuf buf, PacketSender sender) {
-        M message = decoder.apply(buf);
+        P message = decoder.apply(buf);
         client.execute(() -> message.handle(new ChannelHandlerImpl.Wrapper(client.player, NetworkDir.PLAY_TO_CLIENT)));
     }
 }

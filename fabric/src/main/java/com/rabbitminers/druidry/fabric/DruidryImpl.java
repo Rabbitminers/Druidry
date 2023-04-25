@@ -2,6 +2,7 @@ package com.rabbitminers.druidry.fabric;
 
 import com.rabbitminers.druidry.Druidry;
 import com.rabbitminers.druidry.base.registrate.DruidicRegistrate;
+import com.rabbitminers.druidry.fabric.events.CommonEventsFabric;
 import com.rabbitminers.druidry.fabric.base.registrate.DruidicRegistrateFabric;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -15,6 +16,7 @@ public class DruidryImpl implements ModInitializer {
     public void onInitialize() {
         Druidry.init();
         REGISTRATE.register();
+        CommonEventsFabric.register();
 
         ServerLifecycleEvents.SERVER_STARTING.register(s -> currentServer = s);
     }

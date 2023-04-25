@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ChannelHandlerImpl extends ChannelHandler {
+
     public static ChannelHandler createChannel(ResourceLocation channelMame) {
         return new ChannelHandlerImpl(channelMame);
     }
@@ -38,10 +39,10 @@ public class ChannelHandlerImpl extends ChannelHandler {
     public static Map<Class<?>, ResourceLocation> ID_MAP = new HashMap<>();
 
     @Override
-    public <P extends Packet> void register(
+    public <M extends Packet> void register(
             NetworkDir direction,
-            Class<P> messageClass,
-            Function<FriendlyByteBuf, P> decoder) {
+            Class<M> messageClass,
+            Function<FriendlyByteBuf, M> decoder) {
 
         if(direction == NetworkDir.BOTH){
             register(NetworkDir.PLAY_TO_CLIENT, messageClass, decoder);
@@ -55,7 +56,7 @@ public class ChannelHandlerImpl extends ChannelHandler {
             NetworkDir finalDirection = direction;
             ServerPlayNetworking.registerGlobalReceiver(
                     res, (server, player, h, buf, r) -> {
-                        P message = decoder.apply(buf);
+                        M message = decoder.apply(buf);
                         server.execute(() -> message.handle(new Wrapper(player, finalDirection)));
                     });
         } else {
@@ -87,28 +88,31 @@ public class ChannelHandlerImpl extends ChannelHandler {
     }
 
     @Override
-    public void sendToClientPlayer(ServerPlayer serverPlayer, Packet packet) {
+    public void sendToClientPlayer(ServerPlayer serverPlayer, Packet message) {
+        //for (ServerPlayer player : PlayerLookup.tracking(entity)) {
         FriendlyByteBuf buf = PacketByteBufs.create();
-        packet.writeToBuffer(buf);
-        ServerPlayNetworking.send(serverPlayer, ID_MAP.get(packet.getClass()), buf);
+        message.writeToBuffer(buf);
+        ServerPlayNetworking.send(serverPlayer, ID_MAP.get(message.getClass()), buf);
+        // }
     }
 
     @Override
-    public void sendToAllClientPlayers(Packet packet) {
+    public void sendToAllClientPlayers(Packet message) {
         for (var p : DruidryImpl.currentServer.getPlayerList().getPlayers()) {
-            sendToClientPlayer(p, packet);
+            sendToClientPlayer(p, message);
         }
     }
 
     @Override
-    public void sendToServer(Packet packet) {
+    public void sendToServer(Packet message) {
         FriendlyByteBuf buf = PacketByteBufs.create();
-        packet.writeToBuffer(buf);
-        ClientPlayNetworking.send(ID_MAP.get(packet.getClass()), buf);
+        message.writeToBuffer(buf);
+        ClientPlayNetworking.send(ID_MAP.get(message.getClass()), buf);
     }
 
     @Override
     public void sendToAllClientPlayersInRange(Level level, BlockPos pos, double radius, Packet message) {
+
         MinecraftServer currentServer = DruidryImpl.currentServer;
         if (currentServer != null) {
             PlayerList players = currentServer.getPlayerList();
@@ -120,26 +124,26 @@ public class ChannelHandlerImpl extends ChannelHandler {
     }
 
     @Override
-    public void sentToAllClientPlayersTrackingEntity(Entity target, Packet packet) {
+    public void sentToAllClientPlayersTrackingEntity(Entity target, Packet message) {
         if (target.level instanceof ServerLevel serverLevel) {
-            serverLevel.getChunkSource().broadcast(target, toVanillaPacket(packet));
+            serverLevel.getChunkSource().broadcast(target, toVanillaPacket(message));
         }
     }
 
     @Override
-    public void sentToAllClientPlayersTrackingEntityAndSelf(Entity target, Packet packet) {
+    public void sentToAllClientPlayersTrackingEntityAndSelf(Entity target, Packet message) {
         if (target.level instanceof ServerLevel serverLevel) {
-            var p = toVanillaPacket(packet);
+            var p = toVanillaPacket(message);
             serverLevel.getChunkSource().broadcast(target, p);
             if (target instanceof ServerPlayer player) {
-                sendToClientPlayer(player, packet);
+                sendToClientPlayer(player, message);
             }
         }
     }
 
-    private net.minecraft.network.protocol.Packet<?> toVanillaPacket(Packet packet) {
+    private net.minecraft.network.protocol.Packet<?> toVanillaPacket(Packet message) {
         FriendlyByteBuf buf = PacketByteBufs.create();
-        packet.writeToBuffer(buf);
-        return ServerPlayNetworking.createS2CPacket(ID_MAP.get(packet.getClass()), buf);
+        message.writeToBuffer(buf);
+        return ServerPlayNetworking.createS2CPacket(ID_MAP.get(message.getClass()), buf);
     }
 }

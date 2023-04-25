@@ -7,6 +7,7 @@ import com.rabbitminers.druidry.Druidry;
 import com.rabbitminers.druidry.networking.ChannelHandler;
 import com.rabbitminers.druidry.networking.DruidryNetworkHandler;
 import com.rabbitminers.druidry.networking.Packet;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,37 +60,28 @@ public class SoupIngredientsManager {
         DruidryNetworkHandler.CHANNEL.sendToAllClientPlayers(new SyncPacket());
     }
 
-    public static class ReloadListener extends SimpleJsonResourceReloadListener {
-        private static Gson GSON = new Gson();
-        public static final ReloadListener INSTANCE = new ReloadListener();
+    public static void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager,
+                             ProfilerFiller profilerFiller) {
+        clear();
 
-        protected ReloadListener() {
-            super(GSON, "soup_ingredients");
-        }
+        for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
+            JsonElement element = entry.getValue();
+            if (!element.isJsonObject())
+                return;
 
-        @Override
-        protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-            clear();
+            ResourceLocation id = entry.getKey();
+            JsonObject object = element.getAsJsonObject();
+            Optional<SoupIngredient> ingredient = SoupIngredient.fromJson(id, object);
 
-            for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
-                JsonElement element = entry.getValue();
-                if (!element.isJsonObject())
-                    return;
-
-                ResourceLocation id = entry.getKey();
-                JsonObject object = element.getAsJsonObject();
-                Optional<SoupIngredient> ingredient = SoupIngredient.fromJson(id, object);
-
-                if (ingredient.isEmpty()) {
-                    Druidry.LOGGER.error("Unable to register invalid soup ingredient: " + id);
-                    continue;
-                }
-
-                INGREDIENTS.put(id, ingredient.get());
+            if (ingredient.isEmpty()) {
+                Druidry.LOGGER.error("Unable to register invalid soup ingredient: " + id);
+                continue;
             }
 
-            mapMapToItemMap();
+            INGREDIENTS.put(id, ingredient.get());
         }
+
+        mapMapToItemMap();
     }
 
     public static class SyncPacket implements Packet {
