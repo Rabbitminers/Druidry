@@ -22,6 +22,7 @@ configurations {
 repositories {
     maven { url = "https://mvn.devos.one/snapshots/" } // Registrate
     maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
+    maven { url = "https://api.modrinth.com/maven" } // Lazy DFU
 }
 
 dependencies {
@@ -31,6 +32,8 @@ dependencies {
     // modApi("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:$porting_lib_version+$minecraft_version")
     implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
     modApi("com.tterrag.registrate_fabric:Registrate:$registrate_fabric_version")
+
+    modLocalRuntime("maven.modrinth:lazydfu:$lazy_dfu_version")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
