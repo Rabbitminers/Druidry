@@ -174,7 +174,7 @@ public class FunkyEntityModelRenderer {
         ObjectListIterator<ModelBox> iterator = this.cubeList.iterator();
 
         while(iterator.hasNext()) {
-            FunkyEntityModelRenderer.ModelBox modelBox = (FunkyEntityModelRenderer.ModelBox)iterator.next();
+            FunkyEntityModelRenderer.ModelBox modelBox = iterator.next();
             FunkyEntityModelRenderer.TexturedQuad[] quads = modelBox.quads;
             int var14 = quads.length;
 
@@ -271,7 +271,8 @@ public class FunkyEntityModelRenderer {
         public final float posY2;
         public final float posZ2;
 
-        public ModelBox(int texOffX, int texOffY, float x, float y, float z, float width, float height, float depth, float dX, float dY, float dZ, boolean mirror, float p_i225950_13_, float p_i225950_14_) {
+        public ModelBox(int texOffX, int texOffY, float x, float y, float z, float width, float height, float depth,
+                        float dX, float dY, float dZ, boolean mirror, float u, float v) {
             this.posX1 = x;
             this.posY1 = y;
             this.posZ1 = z;
@@ -294,29 +295,69 @@ public class FunkyEntityModelRenderer {
                 x = f3;
             }
 
-            FunkyEntityModelRenderer.PositionTextureVertex vertex7 = new FunkyEntityModelRenderer.PositionTextureVertex(x, y, z, 0.0F, 0.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex = new FunkyEntityModelRenderer.PositionTextureVertex(f, y, z, 0.0F, 8.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex1 = new FunkyEntityModelRenderer.PositionTextureVertex(f, f1, z, 8.0F, 8.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex2 = new FunkyEntityModelRenderer.PositionTextureVertex(x, f1, z, 8.0F, 0.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex3 = new FunkyEntityModelRenderer.PositionTextureVertex(x, y, f2, 0.0F, 0.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex4 = new FunkyEntityModelRenderer.PositionTextureVertex(f, y, f2, 0.0F, 8.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex5 = new FunkyEntityModelRenderer.PositionTextureVertex(f, f1, f2, 8.0F, 8.0F);
-            FunkyEntityModelRenderer.PositionTextureVertex vertex6 = new FunkyEntityModelRenderer.PositionTextureVertex(x, f1, f2, 8.0F, 0.0F);
-            float f4 = (float)texOffX;
-            float f5 = (float)texOffX + depth;
-            float f6 = (float)texOffX + depth + width;
-            float f7 = (float)texOffX + depth + width + width;
-            float f8 = (float)texOffX + depth + width + depth;
-            float f9 = (float)texOffX + depth + width + depth + width;
-            float f10 = (float)texOffY;
-            float f11 = (float)texOffY + depth;
-            float f12 = (float)texOffY + depth + height;
-            this.quads[2] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex4, vertex3, vertex7, vertex}, f5, f10, f6, f11, p_i225950_13_, p_i225950_14_, mirror, Direction.DOWN);
-            this.quads[3] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex1, vertex2, vertex6, vertex5}, f6, f11, f7, f10, p_i225950_13_, p_i225950_14_, mirror, Direction.UP);
-            this.quads[1] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex7, vertex3, vertex6, vertex2}, f4, f11, f5, f12, p_i225950_13_, p_i225950_14_, mirror, Direction.WEST);
-            this.quads[4] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex, vertex7, vertex2, vertex1}, f5, f11, f6, f12, p_i225950_13_, p_i225950_14_, mirror, Direction.NORTH);
-            this.quads[0] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex4, vertex, vertex1, vertex5}, f6, f11, f8, f12, p_i225950_13_, p_i225950_14_, mirror, Direction.EAST);
-            this.quads[5] = new FunkyEntityModelRenderer.TexturedQuad(new FunkyEntityModelRenderer.PositionTextureVertex[]{vertex3, vertex4, vertex5, vertex6}, f8, f11, f9, f12, p_i225950_13_, p_i225950_14_, mirror, Direction.SOUTH);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex7 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(x, y, z, 0.0F, 0.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(f, y, z, 0.0F, 8.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex1 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(f, f1, z, 8.0F, 8.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex2 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(x, f1, z, 8.0F, 0.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex3 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(x, y, f2, 0.0F, 0.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex4 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(f, y, f2, 0.0F, 8.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex5 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(f, f1, f2, 8.0F, 8.0F);
+            FunkyEntityModelRenderer.PositionTextureVertex vertex6 =
+                    new FunkyEntityModelRenderer.PositionTextureVertex(x, f1, f2, 8.0F, 0.0F);
+
+            float f4 = (float) texOffX;
+            float f5 = (float) texOffX + depth;
+            float f6 = (float) texOffX + depth + width;
+            float f7 = (float) texOffX + depth + width + width;
+            float f8 = (float) texOffX + depth + width + depth;
+            float f9 = (float) texOffX + depth + width + depth + width;
+            float f10 = (float) texOffY;
+            float f11 = (float) texOffY + depth;
+            float f12 = (float) texOffY + depth + height;
+
+            this.quads[2] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex4, vertex3, vertex7, vertex
+                    }, f5, f10, f6, f11, u, v, mirror,
+                    Direction.DOWN
+            );
+            this.quads[3] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex1, vertex2, vertex6, vertex5
+                    }, f6, f11, f7, f10, u, v, mirror,
+                    Direction.UP
+            );
+            this.quads[1] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex7, vertex3, vertex6, vertex2
+                    }, f4, f11, f5, f12, u, v, mirror,
+                    Direction.WEST
+            );
+            this.quads[4] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex, vertex7, vertex2, vertex1
+                    }, f5, f11, f6, f12, u, v, mirror,
+                    Direction.NORTH
+            );
+            this.quads[0] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex4, vertex, vertex1, vertex5
+                    }, f6, f11, f8, f12, u, v, mirror,
+                    Direction.EAST
+            );
+            this.quads[5] = new FunkyEntityModelRenderer.TexturedQuad(
+                    new FunkyEntityModelRenderer.PositionTextureVertex[]{
+                            vertex3, vertex4, vertex5, vertex6
+                    }, f8, f11, f9, f12, u, v, mirror,
+                    Direction.SOUTH
+            );
         }
     }
 }
