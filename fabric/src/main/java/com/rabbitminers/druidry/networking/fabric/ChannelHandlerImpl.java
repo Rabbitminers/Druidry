@@ -89,11 +89,9 @@ public class ChannelHandlerImpl extends ChannelHandler {
 
     @Override
     public void sendToClientPlayer(ServerPlayer serverPlayer, Packet message) {
-        //for (ServerPlayer player : PlayerLookup.tracking(entity)) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         message.writeToBuffer(buf);
         ServerPlayNetworking.send(serverPlayer, ID_MAP.get(message.getClass()), buf);
-        // }
     }
 
     @Override
