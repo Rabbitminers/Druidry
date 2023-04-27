@@ -3,6 +3,7 @@ package com.rabbitminers.druidry;
 import com.mojang.logging.LogUtils;
 import com.rabbitminers.druidry.base.registrate.DruidicRegistrate;
 import com.rabbitminers.druidry.networking.DruidryNetworkHandler;
+import com.rabbitminers.druidry.registry.DruidryEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public class Druidry {
 
     public static void init() {
         DruidryNetworkHandler.register();
+        DruidryEntities.register();
     }
 
     public static ResourceLocation asResource(String name) {
