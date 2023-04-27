@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.core.Direction;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class FancyEntityModelPart {
@@ -23,8 +24,8 @@ public class FancyEntityModelPart {
     public final ObjectList<FancyEntityModelPart> childModels;
 
     public FancyEntityModelPart(FancyEntityModel model) {
-        this.textureWidth = 64.0F;
-        this.textureHeight = 32.0F;
+        this.textureWidth = model.textureWidth;
+        this.textureHeight = model.textureHeight;
         this.showModel = true;
         this.cubeList = new ObjectArrayList<>();
         this.childModels = new ObjectArrayList<>();
@@ -96,8 +97,9 @@ public class FancyEntityModelPart {
         return this;
     }
 
-    public void addBox(float x, float y, float z, float width, float height, float depth, float delta) {
+    public FancyEntityModelPart addBox(float x, float y, float z, float width, float height, float depth, float delta) {
         this.addBox(this.textureOffsetX, this.textureOffsetY, x, y, z, width, height, depth, delta, delta, delta, this.mirror, false);
+        return this;
     }
 
     public void addBox(float x, float y, float z, float width, float height, float depth, float deltaX, float deltaY, float deltaZ) {
@@ -112,10 +114,15 @@ public class FancyEntityModelPart {
         this.cubeList.add(new FancyEntityModelPart.ModelBox(texOffX, p_228305_2_, p_228305_3_, p_228305_4_, p_228305_5_, p_228305_6_, p_228305_7_, p_228305_8_, p_228305_9_, p_228305_10_, p_228305_11_, p_228305_12_, this.textureWidth, this.textureHeight));
     }
 
-    public void setRotationPoint(float x, float y, float z) {
+    public void addChildren(FancyEntityModelPart... parts) {
+        this.childModels.addAll(Arrays.asList(parts));
+    }
+
+    public FancyEntityModelPart setRotationPoint(float x, float y, float z) {
         this.rotationPointX = x;
         this.rotationPointY = y;
         this.rotationPointZ = z;
+        return this;
     }
 
     public void render(PoseStack ms, VertexConsumer vb, int x, int y) {
