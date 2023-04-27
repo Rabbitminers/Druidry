@@ -11,20 +11,26 @@ import java.util.List;
 import java.util.function.Function;
 
 public abstract class FancyEntityModel<T extends Entity> extends EntityModel<T> {
-    public final int textureWidth = 64;
-    public final int textureHeight = 64;
+    public final int textureWidth;
+    public final int textureHeight;
     public final List<FancyEntityModelPart> modelParts = new ArrayList<>();
 
-    protected FancyEntityModel() {
-        this(RenderType::entityCutoutNoCull);
+    protected FancyEntityModel(int w, int h) {
+        this(RenderType::entityCutoutNoCull, w, h);
     }
 
-    protected FancyEntityModel(Function<ResourceLocation, RenderType> renderType) {
+    protected FancyEntityModel(Function<ResourceLocation, RenderType> renderType, int w, int h) {
         super(renderType);
+        this.textureWidth = w;
+        this.textureHeight = h;
     }
 
     public void accept(FancyEntityModelPart modelRenderer) {
         modelParts.add(modelRenderer);
+    }
+
+    public FancyEntityModelPart createPart(int x, int y) {
+        return new FancyEntityModelPart(this, x, y);
     }
 
     @Override
