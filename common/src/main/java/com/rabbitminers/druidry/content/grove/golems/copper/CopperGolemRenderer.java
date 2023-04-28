@@ -1,6 +1,8 @@
 package com.rabbitminers.druidry.content.grove.golems.copper;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.rabbitminers.druidry.Druidry;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +13,13 @@ public class CopperGolemRenderer extends MobRenderer<CopperGolemEntity, CopperGo
             Druidry.asResource("textures/entity/copper_golem.png");
 
     public CopperGolemRenderer(EntityRendererProvider.Context context) {
-        super(context, new CopperGolemModel(), 0.6F);
+        super(context, new CopperGolemModel(), 0.4F);
+    }
+
+    @Override
+    public void render(CopperGolemEntity mob, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource,
+                       int i) {
+        super.render(mob, f, g, poseStack, multiBufferSource, i);
     }
 
     @Override
