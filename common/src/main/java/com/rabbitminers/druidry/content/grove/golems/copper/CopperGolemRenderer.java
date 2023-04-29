@@ -28,7 +28,7 @@ public class CopperGolemRenderer extends MobRenderer<CopperGolemEntity, CopperGo
             case UNAFFECTED -> Druidry.asResource("textures/entity/copper_golem.png");
             case EXPOSED -> Druidry.asResource("textures/entity/exposed_copper_golem.png");
             case WEATHERED -> Druidry.asResource("textures/entity/weathered_copper_golem.png");
-            case OXIDIZED -> Druidry.asResource("textures/entity/oxidised_copper_golem.png");
+            case OXIDIZED -> Druidry.asResource("textures/entity/oxidized_copper_golem.png");
         };
     }
 }
