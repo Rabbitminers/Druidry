@@ -1,0 +1,243 @@
+package com.rabbitminers.druidry.render.outline;
+
+import java.util.*;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+
+import com.rabbitminers.druidry.registry.DruidryTextures;
+import com.rabbitminers.druidry.render.CustomRenderTypes;
+import com.rabbitminers.druidry.render.base.TriBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+
+
+
+public class BlockClusterOutline extends Outline {
+
+    public static final int[] zeroAndOne = { 0, 1 };
+
+    private final Cluster cluster;
+
+    protected final Vector3f pos0Temp = new Vector3f();
+    protected final Vector3f pos1Temp = new Vector3f();
+    protected final Vector3f pos2Temp = new Vector3f();
+    protected final Vector3f pos3Temp = new Vector3f();
+    protected final Vector3f normalTemp = new Vector3f();
+    protected final Vector3f originTemp = new Vector3f();
+
+    public BlockClusterOutline(Iterable<BlockPos> positions) {
+        cluster = new Cluster();
+        positions.forEach(cluster::include);
+    }
+
+    @Override
+    public void render(PoseStack ms, TriBufferSource buffer, float pt) {
+        params.loadColor(colorTemp);
+        Vector4f color = colorTemp;
+        int lightmap = params.lightmap;
+        boolean disableLineNormals = params.disableLineNormals;
+
+        renderFaces(ms, buffer, pt, color, lightmap);
+        renderEdges(ms, buffer, pt, color, lightmap, disableLineNormals);
+    }
+
+    protected void renderFaces(PoseStack ms, TriBufferSource buffer, float pt, Vector4f color, int lightmap) {
+        Optional<DruidryTextures> optionalFaceTexture = params.faceTexture;
+        if (optionalFaceTexture.isEmpty())
+            return;
+        DruidryTextures faceTexture = optionalFaceTexture.get();
+
+        PoseStack.Pose pose = ms.last();
+        RenderType renderType = CustomRenderTypes.getOutlineTranslucent(faceTexture.getLocation(), true);
+        VertexConsumer consumer = buffer.getLateBuffer(renderType);
+
+        cluster.visibleFaces.forEach((face, axisDirection) -> {
+            Direction direction = Direction.get(axisDirection, face.axis);
+            BlockPos pos = face.pos;
+            if (axisDirection == AxisDirection.POSITIVE)
+                pos = pos.relative(direction.getOpposite());
+            bufferBlockFace(pose, consumer, pos, direction, color, lightmap);
+        });
+    }
+
+    protected void renderEdges(PoseStack ms, TriBufferSource buffer, float pt, Vector4f color, int lightmap, boolean disableNormals) {
+        float lineWidth = params.getLineWidth();
+        if (lineWidth == 0)
+            return;
+
+        PoseStack.Pose pose = ms.last();
+        VertexConsumer consumer = buffer.getBuffer(CustomRenderTypes.getOutlineSolid());
+
+        cluster.visibleEdges.forEach(edge -> {
+            BlockPos pos = edge.pos;
+            Vector3f origin = originTemp;
+            origin.set(pos.getX(), pos.getY(), pos.getZ());
+            Direction direction = Direction.get(AxisDirection.POSITIVE, edge.axis);
+            bufferCuboidLine(pose, consumer, origin, direction, 1, lineWidth, color, lightmap, disableNormals);
+        });
+    }
+
+    public static void loadFaceData(Direction face, Vector3f pos0, Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector3f normal) {
+        switch (face) {
+            case DOWN -> {
+                // 0 1 2 3
+                pos0.set(0, 0, 1);
+                pos1.set(0, 0, 0);
+                pos2.set(1, 0, 0);
+                pos3.set(1, 0, 1);
+                normal.set(0, -1, 0);
+            }
+            case UP -> {
+                // 4 5 6 7
+                pos0.set(0, 1, 0);
+                pos1.set(0, 1, 1);
+                pos2.set(1, 1, 1);
+                pos3.set(1, 1, 0);
+                normal.set(0, 1, 0);
+            }
+            case NORTH -> {
+                // 7 2 1 4
+                pos0.set(1, 1, 0);
+                pos1.set(1, 0, 0);
+                pos2.set(0, 0, 0);
+                pos3.set(0, 1, 0);
+                normal.set(0, 0, -1);
+            }
+            case SOUTH -> {
+                // 5 0 3 6
+                pos0.set(0, 1, 1);
+                pos1.set(0, 0, 1);
+                pos2.set(1, 0, 1);
+                pos3.set(1, 1, 1);
+                normal.set(0, 0, 1);
+            }
+            case WEST -> {
+                // 4 1 0 5
+                pos0.set(0, 1, 0);
+                pos1.set(0, 0, 0);
+                pos2.set(0, 0, 1);
+                pos3.set(0, 1, 1);
+                normal.set(-1, 0, 0);
+            }
+            case EAST -> {
+                // 6 3 2 7
+                pos0.set(1, 1, 1);
+                pos1.set(1, 0, 1);
+                pos2.set(1, 0, 0);
+                pos3.set(1, 1, 0);
+                normal.set(1, 0, 0);
+            }
+        }
+    }
+
+    public static void addPos(float x, float y, float z, Vector3f pos0, Vector3f pos1, Vector3f pos2, Vector3f pos3) {
+        pos0.add(x, y, z);
+        pos1.add(x, y, z);
+        pos2.add(x, y, z);
+        pos3.add(x, y, z);
+    }
+
+    protected void bufferBlockFace(PoseStack.Pose pose, VertexConsumer consumer, BlockPos pos, Direction face, Vector4f color, int lightmap) {
+        Vector3f pos0 = pos0Temp;
+        Vector3f pos1 = pos1Temp;
+        Vector3f pos2 = pos2Temp;
+        Vector3f pos3 = pos3Temp;
+        Vector3f normal = normalTemp;
+
+        loadFaceData(face, pos0, pos1, pos2, pos3, normal);
+        addPos(pos.getX() + face.getStepX() * 1 / 128f,
+                pos.getY() + face.getStepY() * 1 / 128f,
+                pos.getZ() + face.getStepZ() * 1 / 128f,
+                pos0, pos1, pos2, pos3);
+
+        bufferQuad(pose, consumer, pos0, pos1, pos2, pos3, color, lightmap, normal);
+    }
+
+    private static class Cluster {
+
+        private Map<MergeEntry, AxisDirection> visibleFaces;
+        private Set<MergeEntry> visibleEdges;
+
+        public Cluster() {
+            visibleEdges = new HashSet<>();
+            visibleFaces = new HashMap<>();
+        }
+
+        public void include(BlockPos pos) {
+
+            // 6 FACES
+            for (Axis axis : Axis.values()) {
+                Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
+                for (int offset : zeroAndOne) {
+                    MergeEntry entry = new MergeEntry(axis, pos.relative(direction, offset));
+                    if (visibleFaces.remove(entry) == null)
+                        visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+                }
+            }
+
+            // 12 EDGES
+            for (Axis axis : Axis.values()) {
+                for (Axis axis2 : Axis.values()) {
+                    if (axis == axis2)
+                        continue;
+                    for (Axis axis3 : Axis.values()) {
+                        if (axis == axis3)
+                            continue;
+                        if (axis2 == axis3)
+                            continue;
+
+                        Direction direction = Direction.get(AxisDirection.POSITIVE, axis2);
+                        Direction direction2 = Direction.get(AxisDirection.POSITIVE, axis3);
+
+                        for (int offset : zeroAndOne) {
+                            BlockPos entryPos = pos.relative(direction, offset);
+                            for (int offset2 : zeroAndOne) {
+                                entryPos = entryPos.relative(direction2, offset2);
+                                MergeEntry entry = new MergeEntry(axis, entryPos);
+                                if (!visibleEdges.remove(entry))
+                                    visibleEdges.add(entry);
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+    private static class MergeEntry {
+
+        private Axis axis;
+        private BlockPos pos;
+
+        public MergeEntry(Axis axis, BlockPos pos) {
+            this.axis = axis;
+            this.pos = pos;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (!(o instanceof MergeEntry other))
+                return false;
+
+            return this.axis == other.axis && this.pos.equals(other.pos);
+        }
+
+        @Override
+        public int hashCode() {
+            return this.pos.hashCode() * 31 + axis.ordinal();
+        }
+    }
+
+}
