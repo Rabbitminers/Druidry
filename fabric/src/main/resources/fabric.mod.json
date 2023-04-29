@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "com.rabbitminers.druidry.fabric.DruidryImpl"
+    ],
+    "client": [
+      "com.rabbitminers.druidry.fabric.DruidryClientImpl"
     ]
   },
   "mixins": [
