@@ -6,6 +6,52 @@ If you would like to ask about a feature or want to suggest your own feel free t
 
 ---
 
+## Staffs (and their spells)
+
+Staffs could act as a piece of your grove that the player could carry around with them allowing for golems to follow and for the magical spells and properties of the grove to be harnessed by them.
+
+---
+
+### Crafting
+
+Rather than in a grid perhaps a staff could be extracted from the tree a player creates from a grove in some sort of ritual or through carpentry helping to create a symbolic link to the grove carrying across its purity, its heart and its gods.
+
+This would also allow for the knowledge and research of the grove to be carried across to the staff seamlessly
+
+---
+
+### Spells
+
+Spells would be learnt to the player but be individual to the type of staff and grove, for example in purer groves a spell that effects health would create a healing aura in the area helping you and your allies whereas a darker staff say from the deep dark would wither (or the deep dark equivilent) the surrounding area harming the surrounding enemies
+
+---
+
+#### Divine Invocation
+
+This would allow the player to call apon their god(s) to aid them, either through some kind of attack or a sort of blessing, depending on the god, the player(s) allegiance to them and the purity of the player this would create unique effects (if you've ever played Hades think of [this](https://hades.fandom.com/wiki/Boons) system)
+
+---
+
+#### Paladin spell
+*(A big ol shield)*
+This would create a barrier around the user and allies within radius absorbing a few hits providing a short period for the player to heal during a fight at the cost of not being able to attack or move quickly during or for a short period after the spells activation
+
+In darker groves these sheilds could be spiked causing damage to attackers at the cost of a portion of this health being taken from the player 
+
+---
+
+#### Alchemical spells
+
+Potions brewed by the player can be absorbed into the staff replacing their duration with a set of charges that can be used like splash or lingering potions either on allies or enemies
+
+---
+
+#### Necromancy
+
+Originating in the deep dark, necromancy when learned by the player would allow for defeated enemeis to be raised from the ground with a tap of the staff to become allies to the player. However as this is sculk magic these re-born mobs will be blinded and must be given new targets by the player or they will turn on them as they cannot tell the difference
+
+---
+
 ## The Herbarum (and its contents)
 
 TODO: Replace real-world references with in-game lore
@@ -345,6 +391,40 @@ You could also change their outfit by clicking on them with a different type of 
 Their eyebrows could indicate their status such as health, path finding status, quantity of items available etc.
 
 ---
+
+## Farming
+
+### Overview
+Farming automation should not just be a one step job of placing a golem and go but should be more convenient to automate than in vanilla, if not more expensive but far far cuter
+
+### The Mossy / Meadow Golem
+(Name to be decided)
+
+- [ ] Meadowkin 
+- [ ] Blossomlings 
+- [ ] Mossbeards 
+- [ ] Meadowmen 
+- [ ] Lichenheart
+
+<img src=images/meadow_golem.png/ alt="https://github.com/rabbitminers/druidry" width="400em" alt="">
+
+The meadow golem, once over farmland will occasionally sit down and sprinkle crops by spewing water out of their arms and spin. This will help accellerate the crop growth like bonemeal but slower.
+
+This will also prevent the need for water sources in your farms making them just a little more efficient.
+
+<img src=images/meadow_golem_sitting.png/ alt="https://github.com/rabbitminers/druidry" width="400em" alt="">
+
+Make sure your golems have water to sprinkle otherwise they wont be able to help grow your crops. A lack of water can be indicated by the dried out look and the lack of water dripping from their arms.
+
+(The straw is for visual effect)
+
+<img src=images/dry_meadow_golem.png/ alt="https://github.com/rabbitminers/druidry" width="400em" alt="">
+
+The harvest haversack will allow your golems to carry around crops and seeds to help pick and plant them. On a note of balancing only seeds and plantable crops can be added by the player to the sack and only harvested crops can ever be added and transported by the meadow golem, as to prevent the tuff golem from being overshadowed
+
+<img src=images/harvest_sack.png/ alt="https://github.com/rabbitminers/druidry" width="400em" alt="">
+
+The meadow golem is an extension of the mossy golem from Minecraft legends as seen [here](https://www.minecraft.net/en-us/article/new-friends--the-golems-minecraft-legends) in a article from the minecraft blog
 
 ## The Grove
 
