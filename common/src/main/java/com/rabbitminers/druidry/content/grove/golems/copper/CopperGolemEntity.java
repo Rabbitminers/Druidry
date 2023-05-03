@@ -1,5 +1,7 @@
 package com.rabbitminers.druidry.content.grove.golems.copper;
 
+import com.rabbitminers.druidry.content.grove.golems.copper.ai.goal.MoochAboutGoal;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -14,8 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 import static net.minecraft.world.level.block.WeatheringCopper.*;
 
-public class CopperGolemEntity extends Mob {
-    private Object outlineSlot = new Object();
+public class CopperGolemEntity extends PathfinderMob {
     private static final float OXIDATION_CHANCE = 0.05688889F;
     private static final Random random = new Random();
     private WeatherState weatherState = WeatherState.UNAFFECTED;
@@ -28,6 +29,12 @@ public class CopperGolemEntity extends Mob {
     @Override
     protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions entityDimensions) {
         return 0.55f * entityDimensions.height;
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new MoochAboutGoal(this));
+        super.registerGoals();
     }
 
     @Override
