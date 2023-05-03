@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:wooden_buttons",
+    "#minecraft:wooden_doors",
+    "#minecraft:planks",
+    "#minecraft:logs",
+    "#minecraft:wooden_stairs",
+    "#minecraft:wooden_pressure_plates",
+    "#minecraft:wooden_slabs",
+    "#minecraft:wooden_trapdoors"
+  ]
+}
