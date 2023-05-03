@@ -6,52 +6,6 @@ If you would like to ask about a feature or want to suggest your own feel free t
 
 ---
 
-## Staffs (and their spells)
-
-Staffs could act as a piece of your grove that the player could carry around with them allowing for golems to follow and for the magical spells and properties of the grove to be harnessed by them.
-
----
-
-### Crafting
-
-Rather than in a grid perhaps a staff could be extracted from the tree a player creates from a grove in some sort of ritual or through carpentry helping to create a symbolic link to the grove carrying across its purity, its heart and its gods.
-
-This would also allow for the knowledge and research of the grove to be carried across to the staff seamlessly
-
----
-
-### Spells
-
-Spells would be learnt to the player but be individual to the type of staff and grove, for example in purer groves a spell that effects health would create a healing aura in the area helping you and your allies whereas a darker staff say from the deep dark would wither (or the deep dark equivilent) the surrounding area harming the surrounding enemies
-
----
-
-#### Divine Invocation
-
-This would allow the player to call apon their god(s) to aid them, either through some kind of attack or a sort of blessing, depending on the god, the player(s) allegiance to them and the purity of the player this would create unique effects (if you've ever played Hades think of [this](https://hades.fandom.com/wiki/Boons) system)
-
----
-
-#### Paladin spell
-*(A big ol shield)*
-This would create a barrier around the user and allies within radius absorbing a few hits providing a short period for the player to heal during a fight at the cost of not being able to attack or move quickly during or for a short period after the spells activation
-
-In darker groves these sheilds could be spiked causing damage to attackers at the cost of a portion of this health being taken from the player 
-
----
-
-#### Alchemical spells
-
-Potions brewed by the player can be absorbed into the staff replacing their duration with a set of charges that can be used like splash or lingering potions either on allies or enemies
-
----
-
-#### Necromancy
-
-Originating in the deep dark, necromancy when learned by the player would allow for defeated enemeis to be raised from the ground with a tap of the staff to become allies to the player. However as this is sculk magic these re-born mobs will be blinded and must be given new targets by the player or they will turn on them as they cannot tell the difference
-
----
-
 ## The Herbarum (and its contents)
 
 TODO: Replace real-world references with in-game lore
@@ -430,7 +384,72 @@ The meadow golem is an extension of the mossy golem from Minecraft legends as se
 
 ### Overview
 
-The grove will be the heart of everything you do, the grove will be player made and centered around a  
+The grove will be the heart of everything you do, the grove could be a player made structure dependant on the heart they choose to imbue. This heart like a beacon or a Conduit will require a structure around it however the grove should be far more dynamic as it aims to be a centerpiece of a players home. Depending on the heart different forms and materials could be used.
+
+### Its effects on golems
+
+Only within these groves (or with a staff) can your golems survive, aswell as allowing magic to flourish. Golem automation can be set up with nodes, placed by the player will be connected to the heart by roots (or some other form for other groves) allowing for highly flexible yet performant automation
+
+##### Golems (Technical notes)
+
+The grove network will also be responsible for distrubting "golem schedules", abstracted from the player these will organise the location and action of a golem specified by its type and summoning aswell as bringing it to and from the kitchen to be fed
+
+---
+
+
+## Staffs (and their spells)
+
+Staffs could act as a piece of your grove that the player could carry around with them allowing for golems to follow and for the magical spells and properties of the grove to be harnessed by them.
+
+---
+
+### Crafting
+
+Rather than in a grid perhaps a staff could be extracted from the tree a player creates from a grove in some sort of ritual or through carpentry helping to create a symbolic link to the grove carrying across its purity, its heart and its gods.
+
+This would also allow for the knowledge and research of the grove to be carried across to the staff seamlessly. If  the grove where to be destroyed this "disenchant the staff", causing it to become unusable
+
+---
+
+### Spells
+
+Spells would be learnt to the player but be individual to the type of staff and grove, for example in purer groves a spell that effects health would create a healing aura in the area helping you and your allies whereas a darker staff say from the deep dark would wither (or the deep dark equivilent) the surrounding area harming the surrounding enemies
+
+---
+
+#### Divine Invocation
+
+This would allow the player to call apon their god(s) to aid them, either through some kind of attack or a sort of blessing, depending on the god, the player(s) allegiance to them and the purity of the player this would create unique effects (if you've ever played Hades think of [this](https://hades.fandom.com/wiki/Boons) system)
+
+---
+
+#### Paladin spell
+*(A big ol shield)*
+This would create a barrier around the user and allies within radius absorbing a few hits providing a short period for the player to heal during a fight at the cost of not being able to attack or move quickly during or for a short period after the spells activation
+
+In darker groves these sheilds could be spiked causing damage to attackers at the cost of a portion of this health being taken from the player
+
+---
+
+#### Alchemical spells
+
+Potions brewed by the player can be absorbed into the staff replacing their duration with a set of charges that can be used like splash or lingering potions either on allies or enemies
+
+---
+
+#### Necromancy
+
+Originating in the deep dark, necromancy when learned by the player would allow for defeated enemeis to be raised from the ground with a tap of the staff to become allies to the player. However as this is sculk magic these re-born mobs will be blinded and must be given new targets by the player or they will turn on them as they cannot tell the difference
+
+---
+
+#### Soul Spells
+
+Soul magic would be tied to the nether as detailed  in a concept [here](#-nether-lich-maybe-something-other-than-a-lich-would-be-better), This spell would be cast at a target rather than as an area of effect like some of the others detailed here. It would allow the caster to (temporarily) take control of the entity until they can no longer sustain the link at which point their soul would be returned and the entity would die as its was displaced in the process.
+
+This could be balanced by managing the "cost" and skill required to cast the spell in accordance with the entities health or armor, etc. Essentially an entity like the ender dragon or other bosses would require near or full mastery in soul magic to control.
+
+---
 
 ## Nether 
 
