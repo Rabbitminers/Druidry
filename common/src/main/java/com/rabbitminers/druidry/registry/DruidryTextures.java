@@ -8,7 +8,7 @@ public enum DruidryTextures {
     BLANK("blank.png")
     ;
 
-    public static final String ASSET_PATH = "textures/fancy/";
+    public static final String ASSET_PATH = "textures/misc/";
     private final ResourceLocation location;
 
     private DruidryTextures(String filename) {
