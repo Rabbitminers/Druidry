@@ -41,7 +41,6 @@ dependencies {
     modApi("com.tterrag.registrate_fabric:Registrate:$registrate_fabric_version")
 
     modLocalRuntime("maven.modrinth:lazydfu:$lazy_dfu_version")
-    modLocalRuntime("curse.maven:worldedit-${world_edit_project_id}:${world_edit_file_id}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
