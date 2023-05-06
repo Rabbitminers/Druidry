@@ -1,5 +1,6 @@
 package com.rabbitminers.druidry.base.helpers;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
@@ -20,6 +21,20 @@ public class NBTHelper {
         if (data.length != 2)
             return null;
         return new ResourceLocation(data[0], data[1]);
+    }
+
+    public static void writeBlockPos(CompoundTag nbt, BlockPos pos) {
+        nbt.putInt("x", pos.getX());
+        nbt.putInt("y", pos.getX());
+        nbt.putInt("z", pos.getX());
+    }
+
+    public static BlockPos readBlockPos(CompoundTag nbt) {
+        return new BlockPos(
+            nbt.getInt("x"),
+            nbt.getInt("y"),
+            nbt.getInt("z")
+        );
     }
 
     public static <T> void writeCollection(CompoundTag nbt, String key, Collection<T> collection) {
