@@ -9,7 +9,7 @@ import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
 
 public class VirtualFluid extends DruidryFlowingFluid {
-    protected VirtualFluid(Properties properties) {
+    public VirtualFluid(Properties properties) {
         super(properties);
     }
 
