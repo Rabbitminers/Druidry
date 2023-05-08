@@ -8,9 +8,8 @@ import com.tterrag.registrate.builders.*;
 import com.tterrag.registrate.fabric.FluidHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.*;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -35,15 +34,15 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
     protected final NonNullFunction<DruidryFlowingFluid.Properties, T> fluidFactory;
 
     @Nullable
-    private Boolean defaultSource, defaultBlock, defaultBucket;
+    protected Boolean defaultSource, defaultBlock, defaultBucket;
 
-    private NonNullConsumer<DruidryFlowingFluid.Properties> fluidProperties;
+    protected NonNullConsumer<DruidryFlowingFluid.Properties> fluidProperties;
 
-    private @Nullable Supplier<RenderType> layer = null;
+    protected @Nullable Supplier<RenderType> layer = null;
 
     @Nullable
-    private NonNullSupplier<? extends DruidryFlowingFluid> source;
-    private final List<TagKey<Fluid>> tags = new ArrayList<>();
+    protected NonNullSupplier<? extends DruidryFlowingFluid> source;
+    protected final List<TagKey<Fluid>> tags = new ArrayList<>();
 
     public DruidryFluidBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, ResourceLocation stillTexture,
                                ResourceLocation flowingTexture, NonNullFunction<DruidryFlowingFluid.Properties, T> fluidFactory) {
@@ -53,6 +52,7 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
         this.stillTexture = stillTexture;
         this.flowingTexture = flowingTexture;
         this.fluidFactory = fluidFactory;
+        this.defaultSource = Boolean.TRUE;
 
         String bucketName = this.bucketName;
         this.fluidProperties = p -> p.bucket(() -> owner.get(bucketName, Registry.ITEM_REGISTRY).get())
@@ -61,7 +61,8 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
 
     public static <P> DruidryFluidBuilder<DruidryFlowingFluid.Flowing, P> create(AbstractRegistrate<?> owner, P parent,
                  String name, BuilderCallback callback, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
-        return create(owner, parent, name, callback, stillTexture, flowingTexture, DruidryFlowingFluid.Flowing::new);
+        return BuilderHooks.createFluidBuilder(owner, parent, name, callback, stillTexture, flowingTexture,
+                DruidryFlowingFluid.Flowing::new);
     }
     
     public DruidryFluidBuilder<T, P> fluidProperties(NonNullConsumer<DruidryFlowingFluid.Properties> cons) {
@@ -159,7 +160,7 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
     public final DruidryFluidBuilder<T, P> tag(TagKey<Fluid>... tags) {
         DruidryFluidBuilder<T, P> ret = this.tag(ProviderType.FLUID_TAGS, tags);
         if (this.tags.isEmpty()) {
-            ret.getOwner().<RegistrateTagsProvider<Fluid>, Fluid>setDataGenerator(ret.sourceName, getRegistryKey(), ProviderType.FLUID_TAGS,
+            ret.getOwner().setDataGenerator(ret.sourceName, getRegistryKey(), ProviderType.FLUID_TAGS,
                     prov -> this.tags.stream().map(prov::tag).forEach(p -> p.add(getSource())));
         }
         this.tags.addAll(Arrays.asList(tags));
@@ -172,7 +173,7 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
         return this.removeTag(ProviderType.FLUID_TAGS, tags);
     }
 
-    private DruidryFlowingFluid getSource() {
+    protected DruidryFlowingFluid getSource() {
         NonNullSupplier<? extends DruidryFlowingFluid> source = this.source;
         Preconditions.checkNotNull(source, "Fluid has no source block: " + sourceName);
         return source.get();
@@ -187,11 +188,4 @@ public abstract class DruidryFluidBuilder<T extends DruidryFlowingFluid, P> exte
     }
 
     protected abstract void registerDefaultRenderer(T flowing);
-
-    @ExpectPlatform
-    public static <T extends DruidryFlowingFluid, P> DruidryFluidBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
-                String name, BuilderCallback callback, ResourceLocation stillTexture, ResourceLocation flowingTexture,
-                NonNullFunction<DruidryFlowingFluid.Properties, T> fluidFactory) {
-        throw new AssertionError();
-    }
 }
