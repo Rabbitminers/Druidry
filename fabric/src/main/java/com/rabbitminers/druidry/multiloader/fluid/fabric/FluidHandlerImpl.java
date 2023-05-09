@@ -2,7 +2,7 @@ package com.rabbitminers.druidry.multiloader.fluid.fabric;
 
 import com.rabbitminers.druidry.multiloader.fluid.IFluidStack;
 import com.rabbitminers.druidry.multiloader.fluid.IFluidContainer;
-import com.rabbitminers.druidry.multiloader.fluid.IFluidItem;
+import com.rabbitminers.druidry.multiloader.fluid.ItemFluidHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.Direction;
@@ -28,7 +28,7 @@ public class FluidHandlerImpl {
         return FabricFluidStack.empty();
     }
 
-    public static IFluidItem getItemFluidManager(ItemStack stack) {
+    public static ItemFluidHandler getItemFluidManager(ItemStack stack) {
         return new FabricFluidItemHandler(stack);
     }
 

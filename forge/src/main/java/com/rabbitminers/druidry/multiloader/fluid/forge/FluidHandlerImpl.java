@@ -2,7 +2,7 @@ package com.rabbitminers.druidry.multiloader.fluid.forge;
 
 import com.rabbitminers.druidry.multiloader.fluid.IFluidStack;
 import com.rabbitminers.druidry.multiloader.fluid.IFluidContainer;
-import com.rabbitminers.druidry.multiloader.fluid.IFluidItem;
+import com.rabbitminers.druidry.multiloader.fluid.ItemFluidHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +24,8 @@ public class FluidHandlerImpl {
     }
 
     
-    public static IFluidItem getItemFluidManager(ItemStack stack) {
-        return new ForgeFluidItem(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(IllegalArgumentException::new));
+    public static ItemFluidHandler getItemFluidManager(ItemStack stack) {
+        return new ForgeItemFluidHandler(stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseThrow(IllegalArgumentException::new));
     }
 
     

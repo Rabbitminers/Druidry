@@ -69,7 +69,7 @@ public class FluidHandler {
      * @return Fluid Item Abstraction bound to fluid stack
      */
     @ExpectPlatform
-    public static IFluidItem getItemFluidManager(ItemStack stack) {
+    public static ItemFluidHandler getItemFluidManager(ItemStack stack) {
         throw new AssertionError();
     }
 
@@ -125,7 +125,7 @@ public class FluidHandler {
      * @param stack
      * @return
      */
-    public static Optional<IFluidItem> safeGetItemFluidManager(ItemStack stack) {
+    public static Optional<ItemFluidHandler> safeGetItemFluidManager(ItemStack stack) {
         return isFluidContainingItem(stack) ? Optional.of(getItemFluidManager(stack)) : Optional.empty();
     }
 
@@ -151,7 +151,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long moveItemToStandardFluid(IFluidItem from, ItemStackWrapper sender, IFluidContainer to, IFluidStack fluid) {
+    public static long moveItemToStandardFluid(ItemFluidHandler from, ItemStackWrapper sender, IFluidContainer to, IFluidStack fluid) {
         IFluidStack extracted = from.extractFluid(sender.copy(), fluid, true);
         long inserted = to.insertFluid(extracted, true);
         from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
@@ -166,7 +166,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long moveStandardToItemFluid(IFluidContainer from, IFluidItem to, ItemStackWrapper receiver, IFluidStack fluid) {
+    public static long moveStandardToItemFluid(IFluidContainer from, ItemFluidHandler to, ItemStackWrapper receiver, IFluidStack fluid) {
         IFluidStack extracted = from.extractFluid(fluid, true);
         long inserted = to.insertFluid(receiver.copy(), extracted, true);
         from.extractFluid(newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
@@ -182,7 +182,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long moveItemToItemFluid(IFluidItem from, ItemStackWrapper sender, IFluidItem to, ItemStackWrapper receiver, IFluidStack fluid) {
+    public static long moveItemToItemFluid(ItemFluidHandler from, ItemStackWrapper sender, ItemFluidHandler to, ItemStackWrapper receiver, IFluidStack fluid) {
         IFluidStack extracted = from.extractFluid(sender.copy(), fluid, true);
         long inserted = to.insertFluid(receiver.copy(), extracted, true);
         from.extractFluid(sender, newFluidHolder(fluid.getFluid(), inserted, fluid.getCompound()), false);
@@ -208,7 +208,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long safeMoveItemToStandard(Optional<IFluidItem> from, ItemStackWrapper sender, Optional<IFluidContainer> to, IFluidStack fluid) {
+    public static long safeMoveItemToStandard(Optional<ItemFluidHandler> from, ItemStackWrapper sender, Optional<IFluidContainer> to, IFluidStack fluid) {
         return from.flatMap(f -> to.map(t -> moveItemToStandardFluid(f, sender, t, fluid))).orElse(0L);
     }
 
@@ -220,7 +220,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long safeMoveStandardToItem(Optional<IFluidContainer> from, Optional<IFluidItem> to, ItemStackWrapper receiver, IFluidStack fluid) {
+    public static long safeMoveStandardToItem(Optional<IFluidContainer> from, Optional<ItemFluidHandler> to, ItemStackWrapper receiver, IFluidStack fluid) {
         return from.flatMap(f -> to.map(t -> moveStandardToItemFluid(f, t, receiver, fluid))).orElse(0L);
     }
 
@@ -233,7 +233,7 @@ public class FluidHandler {
      * @param fluid
      * @return
      */
-    public static long safeMoveItemToItem(Optional<IFluidItem> from, ItemStackWrapper sender, Optional<IFluidItem> to, ItemStackWrapper receiver, IFluidStack fluid) {
+    public static long safeMoveItemToItem(Optional<ItemFluidHandler> from, ItemStackWrapper sender, Optional<ItemFluidHandler> to, ItemStackWrapper receiver, IFluidStack fluid) {
         return from.flatMap(f -> to.map(t -> moveItemToItemFluid(f, sender, t, receiver, fluid))).orElse(0L);
     }
 

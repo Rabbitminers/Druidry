@@ -3,7 +3,7 @@ package com.rabbitminers.druidry.multiloader.fluid.fabric;
 import com.rabbitminers.druidry.multiloader.ItemStackWrapper;
 import com.rabbitminers.druidry.multiloader.fluid.IFluidStack;
 import com.rabbitminers.druidry.multiloader.fluid.FluidHandler;
-import com.rabbitminers.druidry.multiloader.fluid.IFluidItem;
+import com.rabbitminers.druidry.multiloader.fluid.ItemFluidHandler;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage) implements IFluidItem {
+public record FabricFluidItemHandler(ItemStack stack, ContainerItemContext context, Storage<FluidVariant> storage) implements ItemFluidHandler {
 
     public FabricFluidItemHandler(ItemStack stack) {
         this(stack, ItemStackStorage.of(stack));

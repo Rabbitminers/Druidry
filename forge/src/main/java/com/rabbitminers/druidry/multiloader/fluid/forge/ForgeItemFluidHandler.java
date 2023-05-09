@@ -2,11 +2,11 @@ package com.rabbitminers.druidry.multiloader.fluid.forge;
 
 import com.rabbitminers.druidry.multiloader.ItemStackWrapper;
 import com.rabbitminers.druidry.multiloader.fluid.IFluidStack;
-import com.rabbitminers.druidry.multiloader.fluid.IFluidItem;
+import com.rabbitminers.druidry.multiloader.fluid.ItemFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-public record ForgeFluidItem(IFluidHandlerItem handler) implements IFluidItem {
+public record ForgeItemFluidHandler(IFluidHandlerItem handler) implements ItemFluidHandler {
     @Override
     public long insertFluid(ItemStackWrapper item, IFluidStack fluid, boolean simulate) {
         int fill = handler.fill(new ForgeFluidStack(fluid).getFluidStack(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
