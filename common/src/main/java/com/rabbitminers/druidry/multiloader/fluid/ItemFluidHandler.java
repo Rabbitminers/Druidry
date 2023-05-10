@@ -2,8 +2,7 @@ package com.rabbitminers.druidry.multiloader.fluid;
 
 import com.rabbitminers.druidry.multiloader.ItemStackWrapper;
 
-public interface IFluidItem {
-
+public interface ItemFluidHandler {
     long insertFluid(ItemStackWrapper item, IFluidStack fluid, boolean simulate);
 
     IFluidStack extractFluid(ItemStackWrapper item, IFluidStack fluid, boolean simulate);
