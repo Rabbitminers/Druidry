@@ -2,11 +2,13 @@ package com.rabbitminers.druidry.base.helpers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class NBTHelper {
@@ -21,6 +23,23 @@ public class NBTHelper {
         if (data.length != 2)
             return null;
         return new ResourceLocation(data[0], data[1]);
+    }
+
+    public static <T extends Enum<T>> void writeEnumValue(CompoundTag nbt, String key, T value) {
+        nbt.putString(key, value.name());
+    }
+
+    public static <T extends Enum<T>> T readEnumValue(CompoundTag nbt, String key, Class<T> enumClass) {
+        T[] enumValues = enumClass.getEnumConstants();
+        if (nbt.contains(key, Tag.TAG_STRING)) {
+            String name = nbt.getString(key);
+            Optional<T> value = Arrays.stream(enumValues)
+                    .filter(entry -> entry.name().equals(name))
+                    .findFirst();
+            if (value.isPresent())
+                return value.get();
+        }
+        return enumValues[0];
     }
 
     public static void writeBlockPos(CompoundTag nbt, BlockPos pos) {
