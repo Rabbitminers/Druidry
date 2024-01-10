@@ -1,6 +1,6 @@
 package com.rabbitminers.druidry.content.grove.network;
 
-import com.rabbitminers.druidry.content.grove.golems.IGolemEntity;
+//import com.rabbitminers.druidry.content.grove.golems.IGolemEntity;
 import net.minecraft.core.BlockPos;
 
 import java.util.HashSet;
@@ -10,13 +10,13 @@ public class GroveNetwork {
     public Long id;
     public boolean initialised;
     public BlockPos heartLocation;
-    protected Set<IGolemEntity> golems;
+    //protected Set<IGolemEntity> golems;
 
     private float purity;
 
-    protected GroveNetwork() {
-        golems = new HashSet<>();
-    }
+    //protected GroveNetwork() {
+    //    golems = new HashSet<>();
+    //}
 
     public void initialseFromHeart() {
 

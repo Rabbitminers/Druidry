@@ -3,6 +3,7 @@ package com.rabbitminers.druidry.registry;
 import com.rabbitminers.druidry.Druidry;
 import com.rabbitminers.druidry.base.registrate.DruidicRegistrate;
 import com.rabbitminers.druidry.content.debug.DebugItem;
+import com.rabbitminers.druidry.content.herbs.herbarum.HerbarumItem;
 import com.rabbitminers.druidry.content.soup.bowl.SoupBlockItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
@@ -13,6 +14,10 @@ public class DruidryItems {
             .register();
 
     public static ItemEntry<SoupBlockItem> SOUP_ITEM = REGISTRATE.item("soup_bowl", SoupBlockItem::new)
+            .register();
+
+    public static ItemEntry<HerbarumItem> HERBARUM = REGISTRATE.item("herbarum", HerbarumItem::new)
+            .lang("Herbarum")
             .register();
 
     public static void register() {

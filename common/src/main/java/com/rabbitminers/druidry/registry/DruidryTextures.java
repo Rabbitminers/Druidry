@@ -5,7 +5,8 @@ import com.rabbitminers.druidry.Druidry;
 import net.minecraft.resources.ResourceLocation;
 
 public enum DruidryTextures {
-    BLANK("blank.png")
+    BLANK("blank.png"),
+    HERBARUM_GUI("herbarum_gui.png")
     ;
 
     public static final String ASSET_PATH = "textures/misc/";

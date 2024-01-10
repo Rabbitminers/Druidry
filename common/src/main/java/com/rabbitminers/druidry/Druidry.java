@@ -19,8 +19,8 @@ public class Druidry {
     public static void init() {
         DruidryNetworkHandler.register();
         DruidryEntities.register();
-        DruidryBlocks.register();
-        DruidryBlockEntities.register();
+        //DruidryBlocks.register();
+        //DruidryBlockEntities.register();
         DruidryItems.register();
         DruidryFluids.register();
     }
