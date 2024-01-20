@@ -35,6 +35,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
+    // Kotlin
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
+    api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
+
     // TODO: Split this into only getting accessors & utils modules
     modImplementation("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:2.1.883+1.19.2")
     implementation("com.github.LlamaLad7:MixinExtras:0.1.1")

@@ -1,5 +1,7 @@
 package com.rabbitminers.druidry.render.partial;
 
+import com.rabbitminers.druidry.render.partial.PartialModel;
+import com.rabbitminers.druidry.render.partial.PartialModelManager;
 import net.fabricmc.fabric.api.client.model.BakedModelManagerHelper;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;

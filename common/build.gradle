@@ -15,6 +15,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
     modApi("com.tterrag.registrate_fabric:Registrate:$registrate_fabric_version")
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
+    api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
 }
 
 publishing {
